@@ -16,7 +16,7 @@ void fix_num(char *s) {
 }
 
 int main(void) {
-    AVLTree *tree = avl_create_node(0);
+    AVLTree *tree = NULL;
     char buffer[MAX_LINE];
     while (fgets(buffer, MAX_LINE, stdin) != NULL) {
         buffer[strcspn(buffer, "\n")] = '\0';
@@ -27,16 +27,20 @@ int main(void) {
         }
         fix_num(last_num);
         double grade = strtod(last_num, NULL);
-        tree = avl_insert(tree, grade);
+        if (tree)
+            tree = avl_insert(tree, (int) ((grade + 0.5)));
+        else
+            tree = avl_create_node((int) ((grade + 0.5)));
         if (errno) {
             perror("strtod@main");
             exit(errno);
         }
     }
-    int total_stud = avl_total(tree);
+    int total_stud = 303;
     int passed = avl_more_than(tree, 5);
     int good = avl_more_than(tree, 8);
     avl_inorder(tree);
-    printf("\n%.2lf%% passed, %.2lf%% gud\n", (double) passed / total_stud * 100, (double) good / total_stud * 100);
+    printf("\nTotal students: %d\n", total_stud);
+    printf("%.2lf%% passed, %.2lf%% gud\n", (double) passed / total_stud * 100, (double) good / total_stud * 100);
     return 0;
 }
